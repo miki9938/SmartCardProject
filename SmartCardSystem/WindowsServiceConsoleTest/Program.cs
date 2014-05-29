@@ -1,24 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using Subsembly.SmartCard;
 
-namespace WindowsService
+namespace WindowsServiceConsoleTest
 {
-    public partial class Service1 : ServiceBase
+    class Program
     {
-        public Service1()
-        {
-            InitializeComponent();
-        }
-
-        protected override void OnStart(string[] args)
+        static void Main(string[] args)
         {
             CardTerminalManager.Singleton.CardInsertedEvent +=
                 new CardTerminalEventHandler(InsertedEvent);
@@ -28,14 +19,6 @@ namespace WindowsService
                 new CardTerminalEventHandler(TerminalFoundEvent);
 
             StartupCardTerminalManager();
-        }
-
-        protected override void OnStop()
-        {
-            if (CardTerminalManager.Singleton.StartedUp)
-            {
-                CardTerminalManager.Singleton.Shutdown();
-            }
         }
 
         static void StartupCardTerminalManager()
