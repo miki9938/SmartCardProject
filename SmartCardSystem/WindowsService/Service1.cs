@@ -8,6 +8,9 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using Subsembly.SmartCard;
+using System.Net.Sockets;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace WindowsService
 {
@@ -121,8 +124,43 @@ namespace WindowsService
                 aRespAPDU = aCard.SendCommand(aCmdAPDU);
 
                 string odpowiedz = System.Text.Encoding.UTF8.GetString(aRespAPDU.GetData());
+                string odpConvert = "";
+
+                for (int i = 0; i < odpowiedz.Length; i++)
+                {
+                    if (check(odpowiedz[i]).Equals(false))
+                        odpConvert += " ";
+                    else
+                        odpConvert += odpowiedz[i];
+                }
+
+
+                RegexOptions options = RegexOptions.None;
+                Regex regex = new Regex(@"[ ]{2,}", options);
+                odpConvert = regex.Replace(odpConvert, @" ");
+                odpConvert = odpConvert.Trim();
+
+                string[] studentData = odpConvert.Split(' ');
+
+                /*
+                int a = convert("ą");
+                int c = convert("ć");
+                int e = convert("ę");
+                int l = convert("ł");
+                int n = convert("ń");
+                int o = convert("ó");
+                int s = convert("ś");
+                int rz = convert("ż");
+                int zi = convert("ź");
+                */
+
+
+                string dataToSend = studentData[0] + " " + studentData[1];
+
                 Console.WriteLine(odpowiedz);
                 Console.ReadKey();
+
+                //sendData(dataToSend);
 
             }
             catch (Exception x)
@@ -166,6 +204,73 @@ namespace WindowsService
 
                 }
             }
+        }
+
+        static public bool sendData(string data)
+        {
+            TcpClient client = new TcpClient();
+
+            client.Connect(new IPEndPoint(IPAddress.Parse(Configuration.ServerIP), Configuration.PortNo));
+
+            NetworkStream clientStream = client.GetStream();
+
+            Console.WriteLine("Connected? :" + client.Connected.ToString());
+
+            ASCIIEncoding encoder = new ASCIIEncoding();
+            byte[] buffer = encoder.GetBytes("WS1-" + data);
+
+            clientStream.Write(buffer, 0, buffer.Length);
+
+            clientStream.Flush();
+            try
+            {
+                clientStream.ReadTimeout = 29000;
+
+                byte[] message = new byte[Configuration.MaxMessageBytes];
+                int bytesRead = 0;
+
+                bytesRead = clientStream.Read(message, 0, Configuration.MaxMessageBytes);
+
+                string msg = encoder.GetString(message, 0, bytesRead);
+
+                if (msg == "Serwer - OK")
+                    return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("exception: " + e);
+                return false;
+            }
+
+            return false;
+        }
+
+        static public int convert(string sign)
+        {
+            byte[] a = System.Text.Encoding.UTF8.GetBytes(sign);
+            return System.Text.Encoding.UTF8.GetString(a)[0];
+        }
+
+        static public bool check(char sign)
+        {
+            int[] signTab = new int[10] { 45, 261, 263, 281, 322, 324, 243, 347, 380, 378 };
+
+            foreach (int a in signTab)
+            {
+                if (sign == a)
+                    return true;
+            }
+
+            if (sign > 64 && sign < 91)
+                return true;
+
+            if (sign > 96 && sign < 123)
+                return true;
+
+            //if (sign > 47 && sign < 58)
+            //return true;
+
+            return false;
         }
     }
 }

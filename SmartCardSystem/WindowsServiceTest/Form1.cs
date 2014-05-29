@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Subsembly.SmartCard;
+using System.Text.RegularExpressions;
 
 namespace WindowsServiceTest
 {
@@ -169,12 +170,43 @@ namespace WindowsServiceTest
 
                 aRespAPDU = aCard.SendCommand(aCmdAPDU);
 
-                aCmdAPDU = new CardCommandAPDU(0x00, 0xB0, 0x00, 0x45, 128);
+                aCmdAPDU = new CardCommandAPDU(0x00, 0xB0, 0x00, 0x6D, 36);
 
                 aRespAPDU = aCard.SendCommand(aCmdAPDU);
 
                 string odpowiedz = System.Text.Encoding.UTF8.GetString(aRespAPDU.GetData());
-                textBox1.Text = odpowiedz;
+                string odpConvert = "";
+
+                for (int i = 0; i < odpowiedz.Length; i++)
+                {
+                    if (check(odpowiedz[i]).Equals(false))
+                        odpConvert += " ";
+                    else
+                        odpConvert += odpowiedz[i];
+                }
+                
+
+                RegexOptions options = RegexOptions.None;
+                Regex regex = new Regex(@"[ ]{2,}", options);
+                odpConvert = regex.Replace(odpConvert, @" ");
+                odpConvert = odpConvert.Trim();
+
+                string[] studentData = odpConvert.Split(' ');
+
+                /*
+                int a = convert("ą");
+                int c = convert("ć");
+                int e = convert("ę");
+                int l = convert("ł");
+                int n = convert("ń");
+                int o = convert("ó");
+                int s = convert("ś");
+                int rz = convert("ż");
+                int zi = convert("ź");
+                */
+                
+
+                textBox1.Text = studentData[0] + " " + studentData[1];
 
 
             }
@@ -238,5 +270,34 @@ namespace WindowsServiceTest
                 }
             }
         }
+
+        public int convert(string sign)
+        {
+            byte[] a = System.Text.Encoding.UTF8.GetBytes(sign);
+            return System.Text.Encoding.UTF8.GetString(a)[0];
+        }
+        
+        public bool check(char sign)
+        {
+            int[] signTab = new int[10] { 45, 261, 263, 281, 322, 324, 243, 347, 380, 378 };
+
+            foreach (int a in signTab)
+            {
+                if (sign == a)
+                    return true;
+            }
+
+            if (sign > 64 && sign < 91)
+                return true;
+
+            if (sign > 96 && sign < 123)
+                return true;
+
+            //if (sign > 47 && sign < 58)
+                //return true;
+
+            return false;
+        }
+        
     }
 }
