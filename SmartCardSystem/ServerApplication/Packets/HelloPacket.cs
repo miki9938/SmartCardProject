@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerApplication
+namespace ServerApplication.Packets
 {
-    class Program
+    class HelloPacket
     {
-        static void Main(string[] args)
-        {
-        }
     }
 }
