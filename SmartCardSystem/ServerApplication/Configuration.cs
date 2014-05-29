@@ -16,6 +16,7 @@ namespace ServerApplication
             PortNo = 8001;
             MaxMessageBytes = 9216;
             PacketEndSign = "--SCSPE|";
+            dataFilePath = @"D:\serverData";
         }
 
         public  string ServerIP { get; set; }
@@ -27,5 +28,7 @@ namespace ServerApplication
         public string PacketEndSign { get; set; }
 
         public string PacketSplitSign { get; set; }
+
+        public string dataFilePath { get; set; }
     }
 }

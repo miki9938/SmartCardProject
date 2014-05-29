@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -111,20 +112,44 @@ namespace ServerApplication
             //session.NetworkStream.FlushAsync();
 
               
-              ASCIIEncoding encoder = new ASCIIEncoding();
-              incomeMessage = encoder.GetString(message, 3, bytesRead);
-              incomeMessageType = encoder.GetString(message, 0, 4);
+              incomeMessage = Encoding.UTF8.GetString(message, 4, bytesRead);
+              incomeMessageType = Encoding.UTF8.GetString(message, 0, 4);
               Console.WriteLine(incomeMessage);
               if (incomeMessageType == "WS1-")
               {
-                  byte[] buffer = encoder.GetBytes("Serwer - OK");
+                  byte[] buffer = Encoding.UTF8.GetBytes("Serwer - OK");
 
                   clientStream.Write(buffer, 0, buffer.Length);
                   clientStream.Flush();
+
+                  if (!File.Exists(configuration.dataFilePath))
+                  {
+                      using (StreamWriter sw = File.CreateText(configuration.dataFilePath))
+                      {
+                          sw.Write(incomeMessage + "\n");
+                      }
+                  }
+                  else
+                  {
+                      using (StreamWriter sw = File.AppendText(configuration.dataFilePath))
+                      {
+                          sw.Write(incomeMessage + "\n");
+                      }
+                  }
               }
               else if (incomeMessageType == "CA1-")
               {
-                  byte[] buffer = encoder.GetBytes("Serwer - lista");
+                  byte[] buffer = null;// = Encoding.UTF8.GetBytes("SR-OK" + System.IO.File.ReadAllText(configuration.dataFilePath));
+                  Console.WriteLine(System.IO.File.ReadAllText(configuration.dataFilePath));
+                  using (StreamReader sr = File.OpenText(configuration.dataFilePath))
+                  {
+                      string s = "";
+                      while ((s = sr.ReadLine()) != null)
+                      {
+                          Console.WriteLine(s);
+                          buffer = Encoding.UTF8.GetBytes("SR-OK" + s);
+                      }
+                  }
 
                   clientStream.Write(buffer, 0, buffer.Length);
                   clientStream.Flush();

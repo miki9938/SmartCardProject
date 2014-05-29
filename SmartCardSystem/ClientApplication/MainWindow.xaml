@@ -1,8 +1,36 @@
 ﻿<Window x:Class="ClientApplication.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="500" Width="725">
     <Grid>
-        
+        <Grid HorizontalAlignment="Left" Height="293" VerticalAlignment="Top" Width="518" Margin="10,166,0,0">
+            <RichTextBox Name="RichTextBox2" HorizontalAlignment="Left" Height="264" Margin="10,19,0,0" VerticalAlignment="Top" Width="261" Visibility="Hidden">
+                <FlowDocument>
+                    <Paragraph>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+        </Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="233,44,0,0" TextWrapping="Wrap" Text="Centrum kart inteligentnych" VerticalAlignment="Top" Height="64" Width="447" Foreground="#FF00587C" FontFamily="Square Slabserif 711" FontSize="40"/>
+        <Image HorizontalAlignment="Left" Height="125" Margin="34,22,0,0" VerticalAlignment="Top" Width="125" Source="put_logo.jpg" />
+        <Button HorizontalAlignment="Left" Height="60" Margin="533,390,0,0" VerticalAlignment="Top" Width="160" Click="downloadClick">
+            <Button.Template>
+                <ControlTemplate>
+                    <Rectangle>
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="pobierz.jpg"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <TextBox Name="TextBox1" Text="Brak połączenia" HorizontalAlignment="Left" Height="29" Margin="533,178,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" TextChanged="TextBox_TextChanged" TextDecorations="{x:Null}" FontSize="14"/>
+        <TextBox Name="TextBox2" Text="Nigdy" HorizontalAlignment="Left" Height="29" Margin="533,239,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" TextChanged="TextBox_TextChanged" FontSize="14"/>
+        <Label Content="Ostatnia aktualizacja" HorizontalAlignment="Left" Margin="533,213,0,0" VerticalAlignment="Top" Width="160"/>
+        <RichTextBox Name="RichTextBox1" HorizontalAlignment="Left" Height="100" Margin="547,285,0,0" VerticalAlignment="Top" Width="160" Visibility="Hidden">
+            <FlowDocument>
+            </FlowDocument>
+        </RichTextBox>
+
     </Grid>
 </Window>

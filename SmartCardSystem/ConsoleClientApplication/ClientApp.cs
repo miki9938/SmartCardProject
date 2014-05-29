@@ -21,8 +21,7 @@ namespace ConsoleClientApplication
 
             Console.WriteLine("Connected? :" + client.Connected.ToString());
             
-            ASCIIEncoding encoder = new ASCIIEncoding();
-            byte[] buffer = encoder.GetBytes("WS1-"+data);
+            byte[] buffer = Encoding.UTF8.GetBytes("WS1-"+data);
 
             clientStream.Write(buffer, 0, buffer.Length);
 
@@ -36,7 +35,7 @@ namespace ConsoleClientApplication
 
                 bytesRead = clientStream.Read(message, 0, Configuration.MaxMessageBytes);
 
-                string msg = encoder.GetString(message, 0, bytesRead);
+                string msg = Encoding.UTF8.GetString(message, 0, bytesRead);
 
                 if (msg == "Serwer - OK")
                     return true;
@@ -54,7 +53,9 @@ namespace ConsoleClientApplication
         {
             ClientApp ca = new ClientApp();
 
-            bool b = ca.sendData("pierwsze dane");
+
+
+            bool b = ca.sendData(Console.ReadLine());
 
             Console.WriteLine(b);
             Console.ReadKey();            
