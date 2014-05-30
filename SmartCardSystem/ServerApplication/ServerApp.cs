@@ -126,20 +126,20 @@ namespace ServerApplication
                   {
                       using (StreamWriter sw = File.CreateText(configuration.dataFilePath))
                       {
-                          sw.Write(incomeMessage + "\n");
+                          sw.Write(incomeMessage + "%");
                       }
                   }
                   else
                   {
                       using (StreamWriter sw = File.AppendText(configuration.dataFilePath))
                       {
-                          sw.Write(incomeMessage + "\n");
+                          sw.Write(incomeMessage + "%");
                       }
                   }
               }
               else if (incomeMessageType == "CA1-")
               {
-                  byte[] buffer = null;// = Encoding.UTF8.GetBytes("SR-OK" + System.IO.File.ReadAllText(configuration.dataFilePath));
+                  byte[] buffer = null;
                   Console.WriteLine(System.IO.File.ReadAllText(configuration.dataFilePath));
                   using (StreamReader sr = File.OpenText(configuration.dataFilePath))
                   {

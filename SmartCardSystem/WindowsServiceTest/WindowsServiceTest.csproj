@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardReader.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
